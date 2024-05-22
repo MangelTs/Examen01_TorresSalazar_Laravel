@@ -15,7 +15,7 @@ Ejecutar servidor
 Crear proyecto con laravel
  ```bash
  git init
- git remote add origin https://github.com/MangelTs/sistema-laravel11.git
+ git remote add origin https://github.com/MangelTs/Examen01_Torres_Laravel.git
  git add -A
  git config --global user.email "angel2382002@gmail.com"
  git config --global user.name "MangelTs"

@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehiculo;
 use Illuminate\Http\Request;
+use App\Http\Requests\VehiculoRequest;
 
 class VehiculoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        //dd($request);
+        $texto = trim($request->get('texto'));
+        $registros=Vehiculo::where('mdelo','like', '%'. $texto . '%')->paginate(10);
+        return view('vehiculo.index', compact('registros', 'texto'));
     }
 
     /**
@@ -20,15 +24,24 @@ class VehiculoController extends Controller
      */
     public function create()
     {
-        //
+        $vehiculo = new Vehiculo();
+        return view('vehiculo.action', ['vehiculo'=> new Vehiculo()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(VehiculoRequest $request)
     {
-        //
+        $registro = new Vehiculo;
+        $registro->placa=$request->input('placa');
+        $registro->modelo=$request->input('modelo');
+        $registro->propietario=$request->input('propietario');
+        $registro->save();
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Registro creado satisfactoriamente'
+        ]);
     }
 
     /**
@@ -42,24 +55,38 @@ class VehiculoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Vehiculo $vehiculo)
+    public function edit($id)
     {
-        //
+        $vehiculo = Vehiculo::findOrFail($id);
+        return view('vehiculo.action', compact('vehiculo'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Vehiculo $vehiculo)
+    public function update(VehiculoRequest $request, $id)
     {
-        //
+        $vehiculo = Vehiculo::findOrFail($id);
+        $vehiculo->placa=$request->placa;
+        $vehiculo->save();
+
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Actualizado satisfactoriamente'
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Vehiculo $vehiculo)
+    public function destroy($id)
     {
-        //
+        $registro = Vehiculo::findOrFail($id);
+        $registro->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $registro->nombre . ' Eliminado'
+        ]);
     }
 }

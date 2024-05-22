@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Entrada;
 use Illuminate\Http\Request;
+use App\Http\Requests\EntradaRequest;
 
 class EntradaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        //dd($request);
+        $texto = trim($request->get('texto'));
+        $registros=Entrada::where('placa','like', '%'. $texto . '%')->paginate(10);
+        return view('entrada.index', compact('registros', 'texto'));
     }
 
     /**
@@ -20,15 +24,23 @@ class EntradaController extends Controller
      */
     public function create()
     {
-        //
+        $entrada = new Entrada();
+        return view('entrada.action', ['entrada'=> new Entrada()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EntradaRequest $request)
     {
-        //
+        $registro = new Entrada;
+        $registro->nombre=$request->input('placa');
+        $registro->fecha= $request->input('fecha');
+        $registro->save();
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Registro creado satisfactoriamente'
+        ]);
     }
 
     /**
@@ -36,7 +48,7 @@ class EntradaController extends Controller
      */
     public function show(Entrada $entrada)
     {
-        //
+        return "Mostrar";
     }
 
     /**
@@ -44,22 +56,36 @@ class EntradaController extends Controller
      */
     public function edit(Entrada $entrada)
     {
-        //
+        $entrada = Entrada::findOrFail($id);
+        return view('entrada.action', compact('entrada'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Entrada $entrada)
+    public function update(EntradaRequest $request, $id)
     {
-        //
+        $entrada = Entrada::findOrFail($id);
+        $entrada->placa=$request->placa;
+        $entrada->save();
+
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Actualizado satisfactoriamente'
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Entrada $entrada)
+    public function destroy($id)
     {
-        //
+        $registro = Entrada::findOrFail($id);
+        $registro->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $registro->placa . ' Eliminado'
+        ]);
     }
 }

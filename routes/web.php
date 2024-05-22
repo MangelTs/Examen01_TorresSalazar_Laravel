@@ -3,7 +3,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\VehiculoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,7 +14,7 @@ Route::get('admin', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('categoria', CategoriaController::class);
+    Route::resource('vehiculo', VehiculoController::class);
 });
 
 Route::get('/dashboard', function () {

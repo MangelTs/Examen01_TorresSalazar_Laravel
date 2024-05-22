@@ -21,12 +21,12 @@ bash
 
 # 4. Creamos el Controlador      (app\Http\Controllers)
  bash
-    php artisan make:controller CategoriaController --resource --model=Categoria
+    php artisan make:controller EntradaController --resource --model=Entrada
 
 
 # 5. Creamos el Request           (app\Http\Requests)
  bash
-    php artisan make:request CategoriaRequest
+    php artisan make:request EntradaRequest
 
 
 # 6. Agregamos la ruta, al routes/web.php
